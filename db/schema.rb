@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_18_070612) do
+ActiveRecord::Schema.define(version: 2022_12_26_064956) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -52,6 +52,84 @@ ActiveRecord::Schema.define(version: 2022_12_18_070612) do
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "coupons", force: :cascade do |t|
+    t.integer "shop_id"
+    t.integer "number", null: false
+    t.string "title", null: false
+    t.text "body", null: false
+    t.integer "limit"
+    t.boolean "is_valid", default: true
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["shop_id"], name: "index_coupons_on_shop_id"
+  end
+
+  create_table "favorites", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "shop_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["shop_id"], name: "index_favorites_on_shop_id"
+    t.index ["user_id"], name: "index_favorites_on_user_id"
+  end
+
+  create_table "menus", force: :cascade do |t|
+    t.integer "shop_id"
+    t.string "title", null: false
+    t.text "body", null: false
+    t.integer "price", null: false
+    t.boolean "is_valid", default: true
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["shop_id"], name: "index_menus_on_shop_id"
+  end
+
+  create_table "notices", force: :cascade do |t|
+    t.integer "admin_id"
+    t.string "title", null: false
+    t.text "body", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["admin_id"], name: "index_notices_on_admin_id"
+  end
+
+  create_table "reviews", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "shop_id"
+    t.integer "evaluation", null: false
+    t.string "title", null: false
+    t.text "body", null: false
+    t.integer "more_people", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["shop_id"], name: "index_reviews_on_shop_id"
+    t.index ["user_id"], name: "index_reviews_on_user_id"
+  end
+
+  create_table "shop_categories", force: :cascade do |t|
+    t.integer "shop_id"
+    t.integer "category_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category_id"], name: "index_shop_categories_on_category_id"
+    t.index ["shop_id"], name: "index_shop_categories_on_shop_id"
+  end
+
+  create_table "shop_notices", force: :cascade do |t|
+    t.integer "shop_id"
+    t.string "title", null: false
+    t.text "body", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["shop_id"], name: "index_shop_notices_on_shop_id"
+  end
+
   create_table "shops", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -90,4 +168,14 @@ ActiveRecord::Schema.define(version: 2022_12_18_070612) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "coupons", "shops"
+  add_foreign_key "favorites", "shops"
+  add_foreign_key "favorites", "users"
+  add_foreign_key "menus", "shops"
+  add_foreign_key "notices", "admins"
+  add_foreign_key "reviews", "shops"
+  add_foreign_key "reviews", "users"
+  add_foreign_key "shop_categories", "categories"
+  add_foreign_key "shop_categories", "shops"
+  add_foreign_key "shop_notices", "shops"
 end
